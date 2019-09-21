@@ -35,7 +35,7 @@ def onwCap(image):
     results = tfnet.return_predict(img)
     # json.dumps(results
     print(results)
-    sio.emit('results', "holas")
+    sio.emit('results', data="holas")
 
 
 if __name__ == '__main__':
