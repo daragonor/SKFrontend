@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Please work</title>
+</head>
+
+<body>
+
+    <img id="image">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+    <script>
+        const socket = io.connect('http://127.0.0.1:5000', { transport: ['websocket', 'polling'] });
+        socket.on('wcap', (image) => {
+            const imageElm = document.getElementById('image');
+            imageElm.src = `data:image/jpeg;base64,${image}`;
+        });
+        socket.on('results', (results) => {
+            console.log(results)
+        });
+
+    </script>
+</body>
+
+</html>
