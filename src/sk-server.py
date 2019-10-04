@@ -21,6 +21,15 @@ class Detector:
         self.tfnet = None
         self.capture = None
 
+    def begin(self, listen):
+        if self.capture == None and self.tfnet == None:
+            eventlet.spawn(listen)
+            self.tfnet = TFNet(options)
+            self.capture = cv2.VideoCapture(0)
+            self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+            self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+        
+
     def detect(self):
         # stime = time.time()
         if self.capture == None and self.tfnet == None:
@@ -83,19 +92,16 @@ def sessions():
 def listen():
     while True:
         detector.detect()
-        eventlet.sleep(1)
+        eventlet.sleep(0.07)
 
 
 @socketio.on('connect')
 def on_connection():
     print("connected")
-    detector.tfnet = TFNet(options)
-    detector.capture = cv2.VideoCapture(0)
-    detector.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-    detector.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+    #eventlet.spawn(listen)
+    detector.begin(listen)
 
 
-eventlet.spawn(listen)
 
 if __name__ == '__main__':
     socketio.run(app, "127.0.0.1", 5000, debug=True)
