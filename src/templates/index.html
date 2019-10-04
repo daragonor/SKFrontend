@@ -41,7 +41,6 @@
 </head>
 
 <body>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -52,22 +51,18 @@
 
         var ing = [];
         var inf = [];
-        var results;
         /* socket.on('wcap', (image) => {
-            const imageElm = document.getElementById('img');
-            imageElm.src = `data:image/jpeg;base64,${image}`;
+            bg = `data:image/jpeg;base64,${image}`;
+            background(bg)
         }); */
+
         socket.on('results', (results) => {
-            //console.log(typeof results);
-            //console.log(results);
-            //results = JSON.stringify(results);
+
             parsedResults = JSON.parse(results);
-            console.log(parsedResults);
-            results = parsedResults;
+            console.log(parsedResults)
             Array.from(parsedResults).forEach(item => {
                 var aux = false;
                 if (!inf[item.label] && !aux) {
-                    console.log('entro');
                     inf[item.label] = {};
                     aux = true;
                     $.ajax({
@@ -90,14 +85,13 @@
             ing = parsedResults;
         });
         function setup() {
-            var canvas = createCanvas(1600, 900);
+            var canvas = createCanvas(1920, 1080);
             noFill();
             stroke(0);
         }
 
         function draw() {
             background(0);
-            console.log(ing);
             Array.from(ing).forEach(item => {
                 console.log(item);
                 var cat_x = item.bottomright.x - item.topleft.x;
@@ -142,7 +136,7 @@
             strokeWeight(0);
             textSize(16);
             textStyle(BOLD);
-            fill(255);
+            //fill(255);
             // console.log((top_w - top_x) / 2, top_y - 20);
             text(title, top_x, top_y - 55);
         }
