@@ -14,7 +14,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'vnkdjnfjknfl1232#'
 socketio = SocketIO()
 socketio.init_app(app, cors_allowed_origins="*")
-
+CAMERA_SLOT = 0 
+#0 -> main camera
+#1-3 -> USB
 
 class Detector:
     def __init__(self):
@@ -25,10 +27,9 @@ class Detector:
         if self.capture == None and self.tfnet == None:
             eventlet.spawn(listen)
             self.tfnet = TFNet(options)
-            self.capture = cv2.VideoCapture(0)
+            self.capture = cv2.VideoCapture(CAMERA_SLOT)
             self.capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
             self.capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
-        
 
     def detect(self):
         # stime = time.time()
@@ -92,15 +93,14 @@ def sessions():
 def listen():
     while True:
         detector.detect()
-        eventlet.sleep(0.07)
+        eventlet.sleep(0.03)
 
 
 @socketio.on('connect')
 def on_connection():
     print("connected")
-    #eventlet.spawn(listen)
+    # eventlet.spawn(listen)
     detector.begin(listen)
-
 
 
 if __name__ == '__main__':
