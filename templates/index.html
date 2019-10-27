@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Please work</title>
+    <!--link rel="stylesheet" type="text/css" href="/styles.css"-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+        integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <!-- <link rel="stylesheet" href="style.css"> -->
+
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js"
+        integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ"
+        crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js"
+        integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <!--link rel="stylesheet" type="text/css" href="/styles.css"-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+    <style>
+        body,
+        html {
+            overflow: hidden;
+            margin: 0px;
+            padding: 0px;
+            background-color: #000000;
+        }
+
+        #base {
+            position: relative;
+            z-index: 0;
+            width: 1920px;
+            height: 1080px;
+        }
+
+        #main {
+            position: absolute;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+        }
+
+        #interface .recognition-area {
+            position: absolute;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+        }
+
+        .progress-ring__circle {
+            stroke-dasharray: 10 20;
+        }
+
+        .wrapper {
+            display: flex;
+            align-items: stretch;
+            z-index: 1;
+        }
+
+        #sidebar.active {
+            margin-left: -250px;
+        }
+
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            min-height: 100vh;
+        }
+
+        a[data-toggle="collapse"] {
+            position: relative;
+        }
+
+        .dropdown-toggle::after {
+            display: block;
+            position: absolute;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+        }
+
+        @media (max-width: 768px) {
+            #sidebar {
+                margin-left: -250px;
+            }
+
+            #sidebar.active {
+                margin-left: 0;
+            }
+        }
+
+        @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+        /*  
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #fafafa;
+}
+*/
+
+        a,
+        a:hover,
+        a:focus {
+            color: inherit;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        #sidebar {
+            background: #409655;
+            color: #fff;
+            transition: all 0.3s;
+        }
+
+        #sidebar .sidebar-header {
+            padding: 20px;
+            background: #409655;
+        }
+
+        #sidebar ul.components {
+            padding: 20px 0;
+            border-bottom: 1px solid #47748b;
+        }
+
+        #sidebar ul p {
+            color: #fff;
+            padding: 10px;
+        }
+
+        #sidebar ul li a {
+            padding: 10px;
+            font-size: 1.1em;
+            display: block;
+        }
+
+        #sidebar ul li a:hover {
+            color: #97EAB8;
+            background: #fff;
+        }
+
+        #sidebar ul li.active>a,
+        a[aria-expanded="true"] {
+            color: #fff;
+            background: #68A27A;
+        }
+
+        ul ul a {
+            font-size: 0.9em !important;
+            padding-left: 30px !important;
+            background: #68A27A;
+        }
+
+        #defaultCanvas0 {
+            z-index: 99999;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper" id='wrapper'>
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3 id="perfil">Daniel Aragon </h3>
+            </div>
+
+            <ul class="list-unstyled components" id="history-list">
+
+
+            </ul>
+        </nav>
+
+        <div id="content">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+
+                    <button type="button" id="sidebarCollapse" class="btn btn-success">
+                        <i class="fas fa-align-left"></i>
+                        <span>Registro Nutricional</span>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Page Content -->
+            <div style="margin-left:25%">
+
+            </div>
+        </div>
+    </div>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"
+        integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"
+        integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.dom.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $('#sidebar').addClass('active');
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+            });
+
+            /* $.ajax({
+                method: 'GET',
+                url: 'http://localhost:3000/api/history/1',
+                async: true,
+                headers: {
+                    "Access-Control-Allow-Origin": "*"
+                }
+            }).done(function (data) {
+                console.log(data);
+                $("#perfil").html(data.data[0].nombre);
+                data.data.forEach(item => {
+                    var new_id = item.receta.replace(" ", "");
+                    $("#history-list").append(
+                        '<li>' +
+                        '<a href="#' + new_id + 'Submenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">' + item.receta + '</a>' +
+                        '<ul class="collapse list-unstyled" id="' + new_id + 'Submenu">' +
+                        '<li>' +
+                        '<a>415 Calorías</a>' +
+                        '</li>' +
+                        '</ul>' +
+                        '</li>'
+                    )
+                });
+            }); */
+        });
+    </script>
+    <script>
+        const socket = io.connect('http://127.0.0.1:5000', {
+            transport: ['websocket', 'polling']
+        });
+        var a = 0;
+
+        var ing = [];
+        var inf = [];
+        /* socket.on('wcap', (image) => {
+            bg = `data:image/jpeg;base64,${image}`;
+            background(bg)
+        }); */
+
+        socket.on('results', (results) => {
+            parsedResults = JSON.parse(results);
+            Array.from(parsedResults).forEach(item => {
+                var aux = false;
+                if (!inf[item.label] && !aux) {
+                    inf[item.label] = {};
+                    aux = true;
+                    $.ajax({
+                        method: 'GET',
+                        url: 'https://smart-kitchen-upc.herokuapp.com/api/ingredients/' + item.label,
+                        async: true,
+                        headers: {
+                            "Access-Control-Allow-Origin": "*"
+                        }
+                    }).done(function (data) {
+                        console.log(data);
+                        inf[item.label] = data;
+                    }).fail(function (data) {
+                        console.log(data);
+                    });
+                }
+            });
+            //setear variable general
+            ing = parsedResults;
+            print(ing)
+        });
+        function setup() {
+            var canvas = createCanvas(1920, 1080);
+            canvas.parent("wrapper");
+            //noFill();
+            //stroke(0);
+        }
+        function draw() {
+            background(0);
+            Array.from(ing).forEach(item => {
+                //console.log(item);
+                var cat_x = item.bottomright.x - item.topleft.x;
+                var cat_y = item.bottomright.y - item.topleft.y;
+                var diam = Math.sqrt(Math.pow(cat_x, 2) + Math.pow(cat_y, 2));
+                var rad = diam / 2;
+                //translate(item.topleft.x, item.topleft.y);
+                // rotate(a);
+                dashedCircle(rad, 4, 4, item.topleft.x, item.topleft.y);
+                drawTitle(item.label, item.topleft.x, item.topleft.y);
+            });
+            // x += 10
+        }
+        function dashedCircle(radius, dashWidth, dashSpacing, x, y) {
+            var steps = 200;
+            var dashPeriod = dashWidth + dashSpacing;
+            var lastDashed = false;
+            for (var i = 0; i < steps; i++) {
+                var curDashed = (i % dashPeriod) < dashWidth;
+                if (curDashed && !lastDashed) {
+                    beginShape();
+                }
+                if (!curDashed && lastDashed) {
+                    endShape();
+                }
+                if (curDashed) {
+                    strokeWeight(1);
+                    stroke(255, 255, 255);
+                    var theta = map(i, 0, steps, 0, TWO_PI);
+                    vertex(cos(theta) * radius + x, sin(theta) * radius + y);
+                }
+                lastDashed = curDashed;
+            }
+            if (lastDashed) {
+                endShape();
+            }
+        }
+        function drawTitle(title, top_x, top_y) {
+            strokeWeight(0);
+            textSize(16);
+            textStyle(BOLD);
+            fill(255);
+            // console.log((top_w - top_x) / 2, top_y - 20);
+            text(title, top_x, top_y - 55);
+        }
+        function getRndInteger(min, max) {
+            return Math.floor(Math.random() * (max - min)) + min;
+        }
+    </script>
+</body>
+
+</html>
